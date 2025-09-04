@@ -27,8 +27,8 @@ class _GalleryScreenState extends State<GalleryScreen> with AutomaticKeepAliveCl
   }
 
   Future<void> _loadAssets() async {
-    final result = await PhotoManager.requestPermissionExtend();
-    if (!result.isAuth) {
+    final ps = await PhotoManager.requestPermissionExtend();
+    if (!ps.hasAccess) {
       setState(() {
         _denied = true;
         _loading = false;
@@ -37,7 +37,10 @@ class _GalleryScreenState extends State<GalleryScreen> with AutomaticKeepAliveCl
     }
     // Schedule background indexing once permission is granted.
     await IndexingService().scheduleIndexingOnce();
-    final paths = await PhotoManager.getAssetPathList(type: RequestType.image);
+    final paths = await PhotoManager.getAssetPathList(
+      onlyAll: true,
+      type: RequestType.image,
+    );
     if (paths.isEmpty) {
       setState(() {
         _assets = <AssetEntity>[];
@@ -45,6 +48,7 @@ class _GalleryScreenState extends State<GalleryScreen> with AutomaticKeepAliveCl
       });
       return;
     }
+    // Prefer the 'Recent' or 'All' album if available
     final recent = paths.first;
     final items = await recent.getAssetListPaged(page: 0, size: 200);
     setState(() {
@@ -71,6 +75,17 @@ class _GalleryScreenState extends State<GalleryScreen> with AutomaticKeepAliveCl
                 await PhotoManager.openSetting();
               },
               child: const Text('Open Settings'),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton(
+              onPressed: () async {
+                setState(() {
+                  _loading = true;
+                  _denied = false;
+                });
+                await _loadAssets();
+              },
+              child: const Text('Retry'),
             ),
           ],
         ),

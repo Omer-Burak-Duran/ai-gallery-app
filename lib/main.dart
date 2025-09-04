@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 import 'state/indexing_state.dart';
 import 'state/search_state.dart';
@@ -14,6 +15,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize background work dispatcher
   await Workmanager().initialize(IndexingService.callbackDispatcher);
+  // Ensure photo_manager performs permission checks (Android 13+/iOS limited access)
+  PhotoManager.setIgnorePermissionCheck(false);
   runApp(const MainApp());
 }
 
