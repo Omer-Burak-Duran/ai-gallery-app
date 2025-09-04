@@ -1,0 +1,44 @@
+name: lens_librarian
+description: "LensLibrarian: AI-powered photo finder"
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Media library access
+  photo_manager: ^3.0.0
+  # ML Kit on-device
+  google_mlkit_face_detection: ^0.12.0
+  google_mlkit_text_recognition: ^0.14.0
+  # ONNX runtime for on-device embeddings
+  onnxruntime: ^1.4.0
+  # Database and ORM
+  sqlite3: ^2.4.3
+  sqlite3_flutter_libs: ^0.5.24
+  drift: ^2.20.2
+  path: ^1.9.0
+  path_provider: ^2.1.5
+  # Background tasks
+  workmanager: ^0.9.0+3
+  # State management
+  provider: ^6.1.2
+  # Utilities
+  image: ^4.2.0
+  uuid: ^4.4.2
+  http: ^1.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.12
+  drift_dev: ^2.20.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/models/
