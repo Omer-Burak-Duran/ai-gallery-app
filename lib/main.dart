@@ -10,6 +10,7 @@ import 'ui/search/search_screen.dart';
 import 'ui/people/people_screen.dart';
 import 'ui/tags/tags_screen.dart';
 import 'services/indexing_service.dart';
+import 'services/db_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,8 @@ Future<void> main() async {
   await Workmanager().initialize(IndexingService.callbackDispatcher);
   // Ensure photo_manager performs permission checks (Android 13+/iOS limited access)
   PhotoManager.setIgnorePermissionCheck(false);
+  // Initialize local database and schema
+  await DBService().initialize();
   runApp(const MainApp());
 }
 
@@ -69,6 +72,20 @@ class _HomePageState extends State<HomePage> {
         ],
         onDestinationSelected: (i) => setState(() => _index = i),
       ),
+      floatingActionButton: _index == 0
+          ? FloatingActionButton.extended(
+              onPressed: () async {
+                // DB sanity check button while developing Milestone 2
+                final ok = await DBService().sanityCheckInsertTag();
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(ok ? 'DB OK' : 'DB failed')),
+                );
+              },
+              label: const Text('DB Check'),
+              icon: const Icon(Icons.storage),
+            )
+          : null,
     );
   }
 }
