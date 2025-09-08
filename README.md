@@ -1,3 +1,3 @@
-# ai_gallery_app
+# LensLibrarian
 
-A new Flutter project.
+An AI assisted photo finder gallery app.
